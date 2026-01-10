@@ -24,11 +24,6 @@ public class BookService {
     @Autowired
     private AuthorRepository authorRepository;
 
-    // nao preciso do construtor por causa do @autoWired
-//    public BookService(BookRepository bookRepository){
-//        this.bookRepository = bookRepository;
-//    }
-
 
     public BookWithAuthorNameDto create (BookCreatDto dto){
 
