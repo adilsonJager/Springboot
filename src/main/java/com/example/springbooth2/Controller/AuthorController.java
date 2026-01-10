@@ -1,6 +1,7 @@
 package com.example.springbooth2.Controller;
 
 
+import com.example.springbooth2.Dto.AuthorWithListOfBooksDto;
 import com.example.springbooth2.Entity.AuthorEntity;
 import com.example.springbooth2.Service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class AuthorController {
     }
 
     @GetMapping(value = "{id}")
-    public ResponseEntity<AuthorEntity> getId(@PathVariable Long id){
+    public ResponseEntity<AuthorWithListOfBooksDto> getId(@PathVariable Long id){
         return ResponseEntity.ok().body(service.findAuthorById(id));
     }
 

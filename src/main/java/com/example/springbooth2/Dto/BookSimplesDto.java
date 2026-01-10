@@ -14,5 +14,4 @@ public class BookSimplesDto {
     private Long id;
     private String name;
 
-
 }

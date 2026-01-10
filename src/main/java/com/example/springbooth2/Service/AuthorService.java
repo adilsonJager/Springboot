@@ -1,7 +1,10 @@
 package com.example.springbooth2.Service;
 
+import com.example.springbooth2.Dto.AuthorWithListOfBooksDto;
+import com.example.springbooth2.Dto.BookSimplesDto;
 import com.example.springbooth2.Entity.AuthorEntity;
 import com.example.springbooth2.Respository.AuthorRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,9 +27,23 @@ public class AuthorService {
         repository.deleteById(id);
     }
 
-    public AuthorEntity findAuthorById(Long id){
-        Optional<AuthorEntity> author = repository.findById(id);
-        return author.get();
+    public AuthorWithListOfBooksDto findAuthorById(Long id){
+
+        AuthorEntity author = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Author não encontrado"));
+        AuthorWithListOfBooksDto dto = new AuthorWithListOfBooksDto();
+
+        dto.setId(author.getId());
+        dto.setName(author.getName());
+
+        List<BookSimplesDto> books = author.getBooks().stream().map(book -> new BookSimplesDto(
+                book.getId(),
+                book.getName()
+        )).toList();
+
+        dto.setBooks(books);
+
+        return dto;
+
     }
 
     public List<AuthorEntity> getAll(){return repository.findAll();}
