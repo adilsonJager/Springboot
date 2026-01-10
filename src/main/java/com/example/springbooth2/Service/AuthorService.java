@@ -4,6 +4,7 @@ import com.example.springbooth2.Dto.AuthorWithListOfBooksDto;
 import com.example.springbooth2.Dto.BookSimplesDto;
 import com.example.springbooth2.Entity.AuthorEntity;
 import com.example.springbooth2.Respository.AuthorRepository;
+import com.example.springbooth2.Respository.BookRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,8 @@ public class AuthorService {
 
     @Autowired
     private AuthorRepository repository;
+    @Autowired
+    private BookRepository bookRepository;
 
 
     public AuthorEntity create (AuthorEntity author){
@@ -24,29 +27,29 @@ public class AuthorService {
     }
 
     public void delete(Long id) {
-        repository.deleteById(id);
+        AuthorEntity idAuthor = repository.findById(id).orElseThrow(() -> EntityNotFound.authorNotFound(id));
+
+        repository.deleteById(idAuthor.getId());
     }
 
     public AuthorWithListOfBooksDto findAuthorById(Long id){
 
-        AuthorEntity author = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Author não encontrado"));
+        AuthorEntity author = repository.findById(id).orElseThrow(() -> EntityNotFound.authorNotFound(id));
         AuthorWithListOfBooksDto dto = new AuthorWithListOfBooksDto();
-
         dto.setId(author.getId());
         dto.setName(author.getName());
-
         List<BookSimplesDto> books = author.getBooks().stream().map(book -> new BookSimplesDto(
                 book.getId(),
                 book.getName()
         )).toList();
-
         dto.setBooks(books);
-
         return dto;
 
     }
 
-    public List<AuthorEntity> getAll(){return repository.findAll();}
+    public List<AuthorEntity> getAll(){
+        return repository.findAll();
+    }
 
     public AuthorEntity update(AuthorEntity author){
         Optional<AuthorEntity> newAuthor = repository.findById(author.getId());
