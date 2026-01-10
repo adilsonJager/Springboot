@@ -1,6 +1,8 @@
 package com.example.springbooth2.Controller;
 
 
+import com.example.springbooth2.Dto.BookCreatDto;
+import com.example.springbooth2.Dto.BookWithAuthorNameDto;
 import com.example.springbooth2.Entity.BookEntity;
 import com.example.springbooth2.Service.BookService;
 import jakarta.persistence.GeneratedValue;
@@ -22,7 +24,7 @@ public class BookController {
 
 
     @PostMapping
-    public ResponseEntity<BookEntity> create(@RequestBody BookEntity obj){
+    public ResponseEntity<BookWithAuthorNameDto> create(@RequestBody BookCreatDto obj){
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(obj));
     }
 

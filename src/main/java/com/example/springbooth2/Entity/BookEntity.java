@@ -20,8 +20,13 @@ public class BookEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-//    private Author author;
+
+    //MUITOS LIVROS PARA UM AUTOR
+    @ManyToOne
+    @JoinColumn(name = "author_id") // ALTERA NOME DA COLUNA
+    private AuthorEntity author;
 
 
-
+    public BookEntity(String name) {
+    }
 }
