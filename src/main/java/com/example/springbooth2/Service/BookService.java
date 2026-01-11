@@ -1,18 +1,19 @@
 package com.example.springbooth2.Service;
 
 
-import com.example.springbooth2.Dto.Book.BookCreatDto;
-import com.example.springbooth2.Dto.Book.BookWithAuthorNameDto;
+import com.example.springbooth2.Dto.Book.BookRequestDto;
+import com.example.springbooth2.Dto.Book.BookResponseDto;
 import com.example.springbooth2.Entity.AuthorEntity;
 import com.example.springbooth2.Entity.BookEntity;
 import com.example.springbooth2.Respository.AuthorRepository;
 import com.example.springbooth2.Respository.BookRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.example.springbooth2.Service.exception.BadRequestException;
+import com.example.springbooth2.Service.exception.EntityNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class BookService {
@@ -24,54 +25,75 @@ public class BookService {
     private AuthorRepository authorRepository;
 
 
-    public BookWithAuthorNameDto create (BookCreatDto dto){
+    public BookResponseDto create (BookRequestDto dto){
 
-        AuthorEntity author;
-
-        if (dto.getAuthorId() != null){
-            author = authorRepository.findById(dto.getAuthorId())
-                    .orElseThrow(() -> new EntityNotFoundException("Author not find"));
-        } else {
-            author = authorRepository.findById(1L).orElseThrow();
+        if (dto.getAuthorId() == null){
+            throw BadRequestException.authorIdNotNull();
         }
+
+        AuthorEntity author = authorRepository.findById(dto.getAuthorId())
+                    .orElseThrow(() -> EntityNotFound.authorNotFound(dto.getAuthorId()));
+
 
         BookEntity book = new BookEntity();
         book.setName(dto.getName());
         book.setAuthor(author);
-
         book = repository.save(book);
 
-        return new BookWithAuthorNameDto(
+        return new BookResponseDto(
                 book.getId(),
                 book.getName(),
-                author.getName()
+                book.getAuthor().getName()
         );
 
     }
 
     public void delete(Long id){
-        repository.deleteById(id);
+        BookEntity book = repository.findById(id).orElseThrow( () -> EntityNotFound.bookNotFound(id));
+        repository.deleteById(book.getId());
     }
 
-    public BookEntity findBookById(Long id){
-        Optional<BookEntity> obj = repository.findById(id);
-        return obj.get();
+    public BookResponseDto findBookById(Long id){
+        BookEntity book = repository.findById(id).orElseThrow(() -> EntityNotFound.bookNotFound(id));
+        return new BookResponseDto(
+                book.getId(),
+                book.getName(),
+                book.getAuthor().getName()
+        );
     }
 
-    public List<BookEntity> getAll(){
-        return repository.findAll();
+    public List<BookResponseDto> getAll(){
+            List<BookEntity> books = repository.findAll();
+
+            return books.stream()
+                    .map(book -> {
+
+                        return new BookResponseDto(
+                                book.getId(),
+                                book.getName(),
+                                book.getAuthor().getName()
+                        );
+                    }).toList();
     }
 
-    public BookEntity update(BookEntity obj){
-        Optional<BookEntity> newObj = repository.findById(obj.getId());
-        updateBook(newObj, obj);
-        repository.save(newObj.get());
-        return newObj.get();
+    public BookResponseDto update(Long id, BookRequestDto obj){
 
-    }
+        if (obj.getAuthorId() == null ){throw  BadRequestException.authorIdNotNull();}
+        AuthorEntity author = authorRepository.findById(obj.getAuthorId()).orElseThrow(() -> EntityNotFound.authorNotFound(obj.getAuthorId()));
+        BookEntity newObj = repository.findById(id).orElseThrow(() -> EntityNotFound.bookNotFound(id));
 
-    private void updateBook(Optional<BookEntity> newObj, BookEntity obj) {
-        newObj.get().setName(obj.getName());
+        newObj.setName(obj.getName());
+        newObj.setAuthor(author);
+
+        repository.save(newObj);
+
+        return new BookResponseDto(
+                newObj.getId(),
+                newObj.getName(),
+                newObj.getAuthor().getName()
+        );
+
+
     }
 
 }

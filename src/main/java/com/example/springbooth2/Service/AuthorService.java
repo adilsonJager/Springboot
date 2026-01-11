@@ -7,6 +7,8 @@ import com.example.springbooth2.Dto.Author.AuthorWithListOfBooksDto;
 import com.example.springbooth2.Dto.Book.BookSimplesDto;
 import com.example.springbooth2.Entity.AuthorEntity;
 import com.example.springbooth2.Respository.AuthorRepository;
+import com.example.springbooth2.Service.exception.BadRequestException;
+import com.example.springbooth2.Service.exception.EntityNotFound;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -31,8 +33,11 @@ public class AuthorService {
     }
 
     public void delete(Long id) {
-        AuthorEntity idAuthor = repository.findById(id).orElseThrow(() -> EntityNotFound.authorNotFound(id));
-        repository.deleteById(idAuthor.getId());
+        AuthorEntity author = repository.findById(id).orElseThrow(() -> EntityNotFound.authorNotFound(id));
+        if (!author.getBooks().isEmpty()){
+            throw BadRequestException.authorCanBeDelet(id);
+        }
+        repository.deleteById(author.getId());
     }
 
     public AuthorWithListOfBooksDto findAuthorById(Long id){
@@ -72,8 +77,6 @@ public class AuthorService {
         return new AuthorResponseDto(saved.getId(), saved.getName());
 
     }
-
-
 
     private List<BookSimplesDto> mapEntity(AuthorEntity books){
 

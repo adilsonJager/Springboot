@@ -1,11 +1,9 @@
 package com.example.springbooth2.Controller;
 
 
-import com.example.springbooth2.Dto.Book.BookCreatDto;
-import com.example.springbooth2.Dto.Book.BookWithAuthorNameDto;
-import com.example.springbooth2.Entity.BookEntity;
+import com.example.springbooth2.Dto.Book.BookRequestDto;
+import com.example.springbooth2.Dto.Book.BookResponseDto;
 import com.example.springbooth2.Service.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,13 +14,16 @@ import java.util.List;
 @RequestMapping("/book")
 public class BookController {
 
+    private final BookService service;
 
-    @Autowired
-    private  BookService service;
+
+    public BookController(BookService service){
+        this.service = service;
+    }
 
 
     @PostMapping
-    public ResponseEntity<BookWithAuthorNameDto> create(@RequestBody BookCreatDto obj){
+    public ResponseEntity<BookResponseDto> create(@RequestBody BookRequestDto obj){
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(obj));
     }
 
@@ -33,19 +34,18 @@ public class BookController {
     }
 
     @GetMapping(value = "{id}")
-    public ResponseEntity<BookEntity> getId(@PathVariable Long id){
+    public ResponseEntity<BookResponseDto> getId(@PathVariable Long id){
         return ResponseEntity.ok().body(service.findBookById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<BookEntity>> getAll(){
+    public ResponseEntity<List<BookResponseDto>> getAll(){
         return ResponseEntity.ok().body(service.getAll());
     }
 
     @PutMapping(value = "{id}")
-    public ResponseEntity<BookEntity> update(@PathVariable Long id, @RequestBody BookEntity book){
-        book.setId(id);
-        return ResponseEntity.ok().body(service.update(book));
+    public ResponseEntity<BookResponseDto> update(@PathVariable Long id, @RequestBody BookRequestDto book){
+        return ResponseEntity.ok().body(service.update(id, book));
     }
 
 }

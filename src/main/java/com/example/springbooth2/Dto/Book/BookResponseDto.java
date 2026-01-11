@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode(of = "id")
-public class BookWithAuthorNameDto {
+public class BookResponseDto {
 
     private Long id;
     private String name;
