@@ -1,4 +1,4 @@
-package com.example.springbooth2.Dto;
+package com.example.springbooth2.Dto.Book;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

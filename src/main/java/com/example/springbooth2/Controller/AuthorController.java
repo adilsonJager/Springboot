@@ -1,8 +1,10 @@
 package com.example.springbooth2.Controller;
 
 
-import com.example.springbooth2.Dto.AuthorWithListOfBooksDto;
-import com.example.springbooth2.Entity.AuthorEntity;
+import com.example.springbooth2.Dto.Author.AuthorCreateDto;
+import com.example.springbooth2.Dto.Author.AuthorResponseDto;
+import com.example.springbooth2.Dto.Author.AuthorUpdateRequestDto;
+import com.example.springbooth2.Dto.Author.AuthorWithListOfBooksDto;
 import com.example.springbooth2.Service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +22,7 @@ public class AuthorController {
     private AuthorService service;
 
     @PostMapping
-    public ResponseEntity<AuthorEntity> creat(@RequestBody AuthorEntity author){
+    public ResponseEntity<AuthorCreateDto> creat(@RequestBody AuthorCreateDto author){
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(author));
     }
 
@@ -36,14 +38,13 @@ public class AuthorController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AuthorEntity>> getAll(){
+    public ResponseEntity<List<AuthorWithListOfBooksDto>> getAll(){
         return ResponseEntity.ok().body(service.getAll());
     }
 
     @PutMapping(value = "{id}")
-    public ResponseEntity<AuthorEntity> update(@PathVariable Long id, @RequestBody AuthorEntity author){
-        author.setId(id);
-        return ResponseEntity.ok().body(service.update(author));
+    public ResponseEntity<AuthorResponseDto> update(@PathVariable Long id, @RequestBody AuthorUpdateRequestDto author){
+        return ResponseEntity.ok().body(service.update(id, author));
     }
 
 

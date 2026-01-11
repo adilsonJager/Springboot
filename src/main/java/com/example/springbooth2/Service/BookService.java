@@ -1,9 +1,8 @@
 package com.example.springbooth2.Service;
 
 
-import com.example.springbooth2.Dto.BookCreatDto;
-import com.example.springbooth2.Dto.BookSimplesDto;
-import com.example.springbooth2.Dto.BookWithAuthorNameDto;
+import com.example.springbooth2.Dto.Book.BookCreatDto;
+import com.example.springbooth2.Dto.Book.BookWithAuthorNameDto;
 import com.example.springbooth2.Entity.AuthorEntity;
 import com.example.springbooth2.Entity.BookEntity;
 import com.example.springbooth2.Respository.AuthorRepository;

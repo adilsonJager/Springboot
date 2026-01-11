@@ -1,14 +1,12 @@
 package com.example.springbooth2.Controller;
 
 
-import com.example.springbooth2.Dto.BookCreatDto;
-import com.example.springbooth2.Dto.BookWithAuthorNameDto;
+import com.example.springbooth2.Dto.Book.BookCreatDto;
+import com.example.springbooth2.Dto.Book.BookWithAuthorNameDto;
 import com.example.springbooth2.Entity.BookEntity;
 import com.example.springbooth2.Service.BookService;
-import jakarta.persistence.GeneratedValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
