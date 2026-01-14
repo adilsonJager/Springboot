@@ -4,7 +4,7 @@ package com.example.springbooth2.Controller;
 import com.example.springbooth2.Dto.Author.AuthorCreateDto;
 import com.example.springbooth2.Dto.Author.AuthorResponseDto;
 import com.example.springbooth2.Dto.Author.AuthorUpdateRequestDto;
-import com.example.springbooth2.Dto.Author.AuthorWithListOfBooksDto;
+import com.example.springbooth2.Dto.Author.AuthorwithlistResponseDto;
 import com.example.springbooth2.Service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,12 +33,12 @@ public class AuthorController {
     }
 
     @GetMapping(value = "{id}")
-    public ResponseEntity<AuthorWithListOfBooksDto> getId(@PathVariable Long id){
+    public ResponseEntity<AuthorwithlistResponseDto> getId(@PathVariable Long id){
         return ResponseEntity.ok().body(service.findAuthorById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<AuthorWithListOfBooksDto>> getAll(){
+    public ResponseEntity<List<AuthorwithlistResponseDto>> getAll(){
         return ResponseEntity.ok().body(service.getAll());
     }
 

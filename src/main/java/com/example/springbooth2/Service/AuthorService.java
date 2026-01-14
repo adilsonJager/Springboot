@@ -3,7 +3,7 @@ package com.example.springbooth2.Service;
 import com.example.springbooth2.Dto.Author.AuthorCreateDto;
 import com.example.springbooth2.Dto.Author.AuthorResponseDto;
 import com.example.springbooth2.Dto.Author.AuthorUpdateRequestDto;
-import com.example.springbooth2.Dto.Author.AuthorWithListOfBooksDto;
+import com.example.springbooth2.Dto.Author.AuthorwithlistResponseDto;
 import com.example.springbooth2.Dto.Book.BookSimplesDto;
 import com.example.springbooth2.Entity.AuthorEntity;
 import com.example.springbooth2.Respository.AuthorRepository;
@@ -40,29 +40,19 @@ public class AuthorService {
         repository.deleteById(author.getId());
     }
 
-    public AuthorWithListOfBooksDto findAuthorById(Long id){
+    public AuthorwithlistResponseDto findAuthorById(Long id){
 
         AuthorEntity author = repository.findById(id).orElseThrow(() -> EntityNotFound.authorNotFound(id));
-        AuthorWithListOfBooksDto dto = new AuthorWithListOfBooksDto();
-        dto.setId(author.getId());
-        dto.setName(author.getName());
-        dto.setBooks(mapEntity(author));
+        AuthorwithlistResponseDto dto = new AuthorwithlistResponseDto(author.getId(), author.getName(), mapEntity(author));
         return dto;
     }
 
-    public List<AuthorWithListOfBooksDto> getAll(){
+    public List<AuthorwithlistResponseDto> getAll(){
 
         List<AuthorEntity> authors = repository.findAll();
 
         return authors.stream()
-                .map(author -> {
-                    AuthorWithListOfBooksDto dto = new AuthorWithListOfBooksDto();
-                    dto.setId(author.getId());
-                    dto.setName(author.getName());
-
-                    dto.setBooks(mapEntity(author));
-                    return dto;
-                }).toList();
+                .map(this::fillUpAuthorResponse).toList();
 
     }
 
@@ -80,16 +70,18 @@ public class AuthorService {
 
     private List<BookSimplesDto> mapEntity(AuthorEntity books){
 
-                List<BookSimplesDto> newList = books.getBooks().stream()
-                .map(b -> new BookSimplesDto(
-                        b.getId(),
-                        b.getName()
-                )).toList();
 
-                return newList;
+        return books.getBooks().stream()
+        .map(b -> new BookSimplesDto(
+                b.getId(),
+                b.getName()
+        )).toList();
 
     }
 
 
+    public AuthorwithlistResponseDto fillUpAuthorResponse (AuthorEntity entity){
+        return new AuthorwithlistResponseDto(entity.getId(), entity.getName(), mapEntity(entity));
+    }
 
 }

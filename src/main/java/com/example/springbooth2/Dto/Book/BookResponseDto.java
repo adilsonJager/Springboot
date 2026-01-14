@@ -5,14 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-@EqualsAndHashCode(of = "id")
-public class BookResponseDto {
 
-    private Long id;
-    private String name;
-    private String AuthorName;
+public record BookResponseDto (Long id, String name, String AuthorName){
 
 }

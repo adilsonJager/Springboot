@@ -11,7 +11,6 @@ import com.example.springbooth2.Service.exception.BadRequestException;
 import com.example.springbooth2.Service.exception.EntityNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 
@@ -40,12 +39,7 @@ public class BookService {
         book.setAuthor(author);
         book = repository.save(book);
 
-        return new BookResponseDto(
-                book.getId(),
-                book.getName(),
-                book.getAuthor().getName()
-        );
-
+        return fillUpDtoResponse(book);
     }
 
     public void delete(Long id){
@@ -55,25 +49,14 @@ public class BookService {
 
     public BookResponseDto findBookById(Long id){
         BookEntity book = repository.findById(id).orElseThrow(() -> EntityNotFound.bookNotFound(id));
-        return new BookResponseDto(
-                book.getId(),
-                book.getName(),
-                book.getAuthor().getName()
-        );
+        return fillUpDtoResponse(book);
     }
 
     public List<BookResponseDto> getAll(){
             List<BookEntity> books = repository.findAll();
 
             return books.stream()
-                    .map(book -> {
-
-                        return new BookResponseDto(
-                                book.getId(),
-                                book.getName(),
-                                book.getAuthor().getName()
-                        );
-                    }).toList();
+                    .map(this::fillUpDtoResponse).toList();
     }
 
     public BookResponseDto update(Long id, BookRequestDto obj){
@@ -87,13 +70,13 @@ public class BookService {
 
         repository.save(newObj);
 
-        return new BookResponseDto(
-                newObj.getId(),
-                newObj.getName(),
-                newObj.getAuthor().getName()
-        );
+        return fillUpDtoResponse(newObj);
 
 
+    }
+
+    public BookResponseDto fillUpDtoResponse(BookEntity book){
+        return new BookResponseDto(book.getId(), book.getName(), book.getAuthor().getName());
     }
 
 }
