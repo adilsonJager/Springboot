@@ -26,10 +26,9 @@ public class AuthorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(author));
     }
 
-    @DeleteMapping(value = "{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id){
-        service.delete(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping
+    public ResponseEntity<List<AuthorwithlistResponseDto>> getAll(){
+        return ResponseEntity.ok().body(service.getAll());
     }
 
     @GetMapping(value = "{id}")
@@ -37,10 +36,13 @@ public class AuthorController {
         return ResponseEntity.ok().body(service.findAuthorById(id));
     }
 
-    @GetMapping
-    public ResponseEntity<List<AuthorwithlistResponseDto>> getAll(){
-        return ResponseEntity.ok().body(service.getAll());
+    @DeleteMapping(value = "{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
+
+
 
     @PutMapping(value = "{id}")
     public ResponseEntity<AuthorResponseDto> update(@PathVariable Long id, @RequestBody AuthorUpdateRequestDto author){
