@@ -1,0 +1,31 @@
+
+POST localhost:8080/author
+Content-Type: application/json
+
+{
+  "name": "Adilson Jager",
+  "email": "adilsonjager@gmail.com",
+  "password": "banana123"
+}
+
+###
+
+GET localhost:8080/author/cc94f209-66c2-4fa1-bedd-bc3a8dd49aa9
+
+###
+
+GET localhost:8080/author
+
+
+###
+
+DELETE localhost:8080/author/57ede116-25f2-41f1-8139-1cdd8df4885a
+
+###
+
+PUT localhost:8080/author/02900dac-0fa6-4593-83a8-757e910082e3
+Content-Type: application/json
+
+{
+  "name": "Adilson Magalhaes"
+}

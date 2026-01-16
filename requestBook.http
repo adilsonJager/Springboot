@@ -1,0 +1,13 @@
+### GET request to example server
+
+GET localhost:8080/book
+
+###
+
+POST localhost:8080/book/register
+Content-Type: application/json
+
+{
+  "name": "O Nome do Vento",
+  "authorId": "02900dac-0fa6-4593-83a8-757e910082e3"
+}
